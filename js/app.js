@@ -1,11 +1,11 @@
 /*
  * Create a list that holds all of your cards
  */
-const deck = ["fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", 
-			"fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", 
-			"fa fa-bicycle", "fa fa-bicycle", "fa fa-diamond", "fa fa-diamond", 
-			"fa fa-bomb", "fa fa-bomb", "fa fa-paper-plane-o", 
-			"fa fa-paper-plane-o"]
+const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", 
+			"fa-cube", "fa-cube", "fa-leaf", "fa-leaf", 
+			"fa-bicycle", "fa-bicycle", "fa-diamond", "fa-diamond", 
+			"fa-bomb", "fa-bomb", "fa-paper-plane-o", 
+			"fa-paper-plane-o"]
 
 /*
  * Display the cards on the page
@@ -13,6 +13,22 @@ const deck = ["fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt",
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+ function displayCards(){
+ 	let newDeck, cardBeg, cardEnd, htmlAddDeck; 
+ 	newDeck = shuffle(deck);  //Shuffles deck array into a new variable
+ 	cardBeg = '<li class="card"><i class="fa ';
+ 	cardEnd = '"></i>';
+ 	htmlAddDeck = "";
+
+ 	$('.deck').empty(); //empties deck to add new one
+
+ 	for (x in newDeck){ //loops through newDeck and stores with HTML to append once
+ 		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
+ 	}
+
+ 	$('.deck').append(htmlAddDeck);
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
