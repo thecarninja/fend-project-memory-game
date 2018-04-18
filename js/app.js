@@ -49,9 +49,20 @@ function displayCard(){
 	$(this).addClass('open show');
 }
 
+function addOpenCard(card){
+	if (openCards.length === 0) {
+		openCards[0] = card;
+	} else if (openCards.length === 1) {
+		openCards[1] = card;
+		//checkPair();
+	}
+}
+
+let openCards = [];
 
 $('.deck').on('click', '.card', function(){
 	displayCard.call(this);
+	addOpenCard($(this).children().attr('class'));
 
 });
 
