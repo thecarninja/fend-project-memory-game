@@ -14,7 +14,7 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
  *   - add each card's HTML to the page
  */
 
- function displayCards(){
+ function displayDeck(){
  	let newDeck, cardBeg, cardEnd, htmlAddDeck; 
  	newDeck = shuffle(deck);  //Shuffles deck array into a new variable
  	cardBeg = '<li class="card"><i class="fa ';
@@ -27,7 +27,7 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
  		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
  	}
 
- 	$('.deck').append(htmlAddDeck);
+ 	$('.deck').append(htmlAddDeck); //adds the new deck for display
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -45,6 +45,15 @@ function shuffle(array) {
     return array;
 }
 
+function displayCard(){
+	$(this).addClass('open show');
+}
+
+
+$('.deck').on('click', '.card', function(){
+	displayCard.call(this);
+
+});
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -57,4 +66,4 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-displayCards();
+displayDeck();
