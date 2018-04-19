@@ -46,19 +46,32 @@ function shuffle(array) {
 }
 
 function displayCard(){
-	$(this).addClass('open show');
+	$(this).addClass('show open');
+	//$(this).attr('id', '#open');
 }
 
 function addOpenCard(card){
+	let searchCard;
+
 	if (openCards.length === 0) {
 		openCards[0] = card;
 	} else if (openCards.length === 1) {
 		openCards[1] = card;
-		//checkPair();
+		
+		if (openCards[0] === openCards[1]){
+			
+			console.log('match found: ' + searchCard);
+		} else {
+			console.log("no match");
+		}
+		console.log("openCards: " + openCards);
+		openCards = []; 
+		return;
 	}
 }
-
-let openCards = [];
+let openCards, moveCount;
+openCards = [];
+moveCount = 0;
 
 $('.deck').on('click', '.card', function(){
 	displayCard.call(this);
