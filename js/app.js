@@ -69,6 +69,7 @@ function addOpenCard(card){
 	if (openCards.length === 0) {
 		openCards[0] = card;
 	} else if (openCards.length === 1) {
+		
 		openCards[1] = card;
 		
 		if (openCards[0] === openCards[1]){
@@ -97,12 +98,17 @@ function removeCards(){
 
 	setTimeout(function(){
 		openCards.length = 0; 
-		$('.deck').children().removeClass('open show wrong');
+		$('.deck').children().removeClass('open show wrong unclickable');
 	}, 1000);
-
 }
 
 $('.deck').on('click', '.card', function(){
+	$(this).addClass('unclickable');
+
+	if (openCards.length >= 2) {return;}    
+	// if ($(this).attr(class) === )
+	console.log($(this).attr('class'));
+
 	displayCard.call(this);
 	addOpenCard($(this).children().attr('class'));
 
@@ -111,15 +117,17 @@ $('.deck').on('click', '.card', function(){
 	} else if (moveCount === 30) {
 		setStars(1);
 	}
-	
+
 });
 
 $('.restart').click(displayDeck);
+
 
 let openCards, moveCount;
 openCards = [];
 
 displayDeck();
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
