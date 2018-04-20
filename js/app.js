@@ -30,6 +30,22 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
  	$('.deck').append(htmlAddDeck); //adds the new deck for display
 }
 
+function displayCards(){
+ 	let newDeck, cardBeg, cardEnd, htmlAddDeck; 
+ 	newDeck = shuffle(deck);
+ 	cardBeg = '<li class="card"><i class="';
+ 	cardEnd = '"></i>';
+ 	htmlAddDeck = "";
+
+ 	$('.deck').empty();
+
+ 	for (x in newDeck){
+ 		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
+ 	}
+
+ 	$('.deck').append(htmlAddDeck);
+}
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
