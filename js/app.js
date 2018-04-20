@@ -47,11 +47,9 @@ function shuffle(array) {
 
 function displayCard(){
 	$(this).addClass('show open');
-	//$(this).attr('id', '#open');
 }
 
 function addOpenCard(card){
-	let searchCard;
 
 	if (openCards.length === 0) {
 		openCards[0] = card;
@@ -59,16 +57,32 @@ function addOpenCard(card){
 		openCards[1] = card;
 		
 		if (openCards[0] === openCards[1]){
-			
-			console.log('match found: ' + searchCard);
-		} else {
-			console.log("no match");
+			setMatched();
 		}
-		console.log("openCards: " + openCards);
-		openCards = []; 
-		return;
+
+		incMoves();
+		removeCards();
 	}
 }
+
+function setMatched(){
+	$('.show').addClass('match');
+}
+
+function incMoves(){
+	moveCount++;
+	$('.moves').text(moveCount);
+}
+	
+function removeCards(){
+	openCards.length = 0; 
+
+	setTimeout(function(){
+		$('.deck').children().removeClass('open show');
+	}, 500);
+
+}
+
 let openCards, moveCount;
 openCards = [];
 moveCount = 0;
