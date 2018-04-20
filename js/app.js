@@ -21,8 +21,12 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
  	cardEnd = '"></i>';
  	htmlAddDeck = "";
 
- 	$('.deck').empty(); //empties deck to add new one
-
+ 	openCards.length = 0;
+ 	moveCount = 0;
+ 	$('.moves').text(moveCount);
+ 	$('.deck').empty();
+ 	setStars(3);
+ 	
  	for (x in newDeck){ //loops through newDeck and stores with HTML to append once
  		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
  	}
@@ -30,20 +34,15 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
  	$('.deck').append(htmlAddDeck); //adds the new deck for display
 }
 
-function displayCards(){
- 	let newDeck, cardBeg, cardEnd, htmlAddDeck; 
- 	newDeck = shuffle(deck);
- 	cardBeg = '<li class="card"><i class="';
- 	cardEnd = '"></i>';
- 	htmlAddDeck = "";
+function setStars(numOfStars) {
+	let addHtml = "";
+ 	$('.stars').empty();
 
- 	$('.deck').empty();
-
- 	for (x in newDeck){
- 		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
+ 	for (i = numOfStars; i > 0; i--) {
+ 		addHtml += '<li><i class="fa fa-star"></i></li>';
  	}
 
- 	$('.deck').append(htmlAddDeck);
+	$('.stars').append(addHtml);
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -74,8 +73,12 @@ function addOpenCard(card){
 		
 		if (openCards[0] === openCards[1]){
 			setMatched();
+		} else {
+			setTimeout(function(){
+				$('.show').addClass('wrong');
+			}, 250);
 		}
-
+		
 		incMoves();
 		removeCards();
 	}
@@ -91,23 +94,32 @@ function incMoves(){
 }
 	
 function removeCards(){
-	openCards.length = 0; 
 
 	setTimeout(function(){
-		$('.deck').children().removeClass('open show');
-	}, 500);
+		openCards.length = 0; 
+		$('.deck').children().removeClass('open show wrong');
+	}, 1000);
 
 }
-
-let openCards, moveCount;
-openCards = [];
-moveCount = 0;
 
 $('.deck').on('click', '.card', function(){
 	displayCard.call(this);
 	addOpenCard($(this).children().attr('class'));
 
+	if (moveCount === 20) {
+		setStars(2);
+	} else if (moveCount === 30) {
+		setStars(1);
+	}
+	
 });
+
+$('.restart').click(displayDeck);
+
+let openCards, moveCount;
+openCards = [];
+
+displayDeck();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -119,5 +131,3 @@ $('.deck').on('click', '.card', function(){
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
-displayDeck();
