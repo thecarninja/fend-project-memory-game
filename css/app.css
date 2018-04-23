@@ -83,6 +83,8 @@ h1 {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+    pointer-events: none;
+
 }
 
 .deck .card.unclickable {
@@ -114,4 +116,53 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+/*
+ * Styles for final score modal
+ */
+
+.final-score {
+    display: none;
+    position: absolute;
+    margin: auto;
+    height: 400px;
+    width: 400px;
+    padding: 32px;
+    border-radius: 10px;
+    border: 1px solid blue;
+
+    -webkit-box-shadow: 25px 28px 19px 0px rgba(0,0,0,0.8);
+    -moz-box-shadow: 25px 28px 19px 0px rgba(0,0,0,0.8);
+    box-shadow: 25px 28px 19px 0px rgba(0,0,0,0.8);
+
+    background: rgba(0,179,250,1);
+    background: -moz-linear-gradient(left, rgba(0,179,250,1) 0%, rgba(0,45,209,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(0,179,250,1)), color-stop(100%, rgba(0,45,209,1)));
+    background: -webkit-linear-gradient(left, rgba(0,179,250,1) 0%, rgba(0,45,209,1) 100%);
+    background: -o-linear-gradient(left, rgba(0,179,250,1) 0%, rgba(0,45,209,1) 100%);
+    background: -ms-linear-gradient(left, rgba(0,179,250,1) 0%, rgba(0,45,209,1) 100%);
+    background: linear-gradient(to right, rgba(0,179,250,1) 0%, rgba(0,45,209,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b3fa', endColorstr='#002dd1', GradientType=1 );
+    
+    text-align: center;
+    color: white;
+}
+
+.final-score .stars {
+    margin: 0; 
+    padding: 0;
+    width: 100%;
+    /*margin-top: 50px;*/
+}
+
+.final-score .stars li {
+    list-style: none;
+    display: inline-block;
+    font-size: 100px;
+    color: yellow;
+}
+
+.restart:hover {
+    background-color: grey;
 }

@@ -1,20 +1,10 @@
-/*
- * Create a list that holds all of your cards
- */
 const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", 
 			"fa-cube", "fa-cube", "fa-leaf", "fa-leaf", 
 			"fa-bicycle", "fa-bicycle", "fa-diamond", "fa-diamond", 
 			"fa-bomb", "fa-bomb", "fa-paper-plane-o", 
 			"fa-paper-plane-o"]
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
- function displayDeck(){
+function displayDeck(){
  	let newDeck, cardBeg, cardEnd, htmlAddDeck; 
  	newDeck = shuffle(deck);  //Shuffles deck array into a new variable
  	cardBeg = '<li class="card"><i class="fa ';
@@ -26,6 +16,9 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
  	$('.moves').text(moveCount);
  	$('.deck').empty();
  	setStars(3);
+ 	$('.final-score').hide();
+ 	elapsed_seconds = 0;
+ 	totalMatched = 0;
  	
  	for (x in newDeck){ //loops through newDeck and stores with HTML to append once
  		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
@@ -82,11 +75,13 @@ function addOpenCard(card){
 		
 		incMoves();
 		removeCards();
+		gameComplete();
 	}
 }
 
 function setMatched(){
 	$('.show').addClass('match');
+	totalMatched++;
 }
 
 function incMoves(){
@@ -102,12 +97,44 @@ function removeCards(){
 	}, 1000);
 }
 
-$('.deck').on('click', '.card', function(){
-	$(this).addClass('unclickable');
+function gameComplete(){
+	if (totalMatched === 8) {
+		$('#final-time').text(get_elapsed_time_string(elapsed_seconds));
+		$('.final-score').show();
+	}
+}
 
-	if (openCards.length >= 2) {return;}    
-	// if ($(this).attr(class) === )
-	console.log($(this).attr('class'));
+function get_elapsed_time_string(total_seconds) { //From https://stackoverflow.com/a/2605236
+  function pretty_time_string(num) {
+    return ( num < 10 ? "0" : "" ) + num;
+  }
+
+  var hours = Math.floor(total_seconds / 3600);
+  total_seconds = total_seconds % 3600;
+
+  var minutes = Math.floor(total_seconds / 60);
+  total_seconds = total_seconds % 60;
+
+  var seconds = Math.floor(total_seconds);
+
+  // Pad the minutes and seconds with leading zeros, if required
+  hours = pretty_time_string(hours);
+  minutes = pretty_time_string(minutes);
+  seconds = pretty_time_string(seconds);
+
+  // Compose the string for display
+  var currentTimeString = hours + ":" + minutes + ":" + seconds;
+
+  return currentTimeString;
+}
+
+
+
+$('.deck').on('click', '.card', function(){
+	
+
+	$(this).addClass('unclickable'); //prevents double clicking to match
+	if (openCards.length >= 2) {return;} //stops extra clicks past one pair of cards
 
 	displayCard.call(this);
 	addOpenCard($(this).children().attr('class'));
@@ -117,25 +144,18 @@ $('.deck').on('click', '.card', function(){
 	} else if (moveCount === 30) {
 		setStars(1);
 	}
-
 });
 
 $('.restart').click(displayDeck);
 
 
-let openCards, moveCount;
+let openCards, moveCount, totalMatched, elapsed_seconds;
+elapsed_seconds = 0;
 openCards = [];
 
 displayDeck();
-
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+	
+setInterval(function() {
+	elapsed_seconds = elapsed_seconds + 1;
+	$('#timer').text(get_elapsed_time_string(elapsed_seconds));
+}, 1000);
