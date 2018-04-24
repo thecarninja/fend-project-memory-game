@@ -2,32 +2,36 @@ const deck = ["fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt",
 			"fa-cube", "fa-cube", "fa-leaf", "fa-leaf", 
 			"fa-bicycle", "fa-bicycle", "fa-diamond", "fa-diamond", 
 			"fa-bomb", "fa-bomb", "fa-paper-plane-o", 
-			"fa-paper-plane-o"]
+			"fa-paper-plane-o"];
 
-function displayDeck(){
+function displayDeck(){ //Shuffles the deck and sets up the board
  	let newDeck, cardBeg, cardEnd, htmlAddDeck; 
  	newDeck = shuffle(deck);  //Shuffles deck array into a new variable
  	cardBeg = '<li class="card"><i class="fa ';
  	cardEnd = '"></i>';
  	htmlAddDeck = "";
 
+ 	//resets the board
+ 	$('.final-score').hide();
+ 	clearInterval(gameTimer);
+ 	$('#timer').data({'execute':true});
  	openCards.length = 0;
  	moveCount = 0;
  	$('.moves').text(moveCount);
  	$('.deck').empty();
  	setStars(3);
- 	$('.final-score').hide();
- 	elapsed_seconds = 0;
+ 	elapsedSeconds = 0;
  	totalMatched = 0;
- 	
- 	for (x in newDeck){ //loops through newDeck and stores with HTML to append once
- 		htmlAddDeck += cardBeg + newDeck[x] + cardEnd;
- 	}
+
+ 	//builds the board
+ 	newDeck.forEach(function(item) { //loops through newDeck and stores with HTML to append once
+ 		htmlAddDeck += cardBeg + item + cardEnd;
+ 	});
 
  	$('.deck').append(htmlAddDeck); //adds the new deck for display
 }
 
-function setStars(numOfStars) {
+function setStars(numOfStars) { //controls number of stars displayed
 	let addHtml = "";
  	$('.stars').empty();
 
@@ -53,11 +57,11 @@ function shuffle(array) {
     return array;
 }
 
-function displayCard(){
+function displayCard(){ //keeps card face up
 	$(this).addClass('show open');
 }
 
-function addOpenCard(card){
+function addOpenCard(card){ //adds card to check if it is a matched pair
 
 	if (openCards.length === 0) {
 		openCards[0] = card;
@@ -79,17 +83,17 @@ function addOpenCard(card){
 	}
 }
 
-function setMatched(){
+function setMatched(){ //sets a pair of cards to match
 	$('.show').addClass('match');
 	totalMatched++;
 }
 
-function incMoves(){
+function incMoves(){ //increments moves by 1
 	moveCount++;
 	$('.moves').text(moveCount);
 }
 	
-function removeCards(){
+function removeCards(){ //puts cards face down
 
 	setTimeout(function(){
 		openCards.length = 0; 
@@ -97,30 +101,32 @@ function removeCards(){
 	}, 1000);
 }
 
-function gameComplete(){
+function gameComplete(){ //ends game and brings up scoreboard
 	if (totalMatched === 8) {
-		$('#final-time').text(get_elapsed_time_string(elapsed_seconds));
+		$('#final-time').text(elapsedTime(elapsedSeconds));
 		$('.final-score').show();
+		clearInterval(gameTimer);
 	}
 }
 
-function get_elapsed_time_string(total_seconds) { //From https://stackoverflow.com/a/2605236
-  function pretty_time_string(num) {
+//Time function from https://stackoverflow.com/a/2605236
+function elapsedTime(totalSeconds) { 
+  function prettyTime(num) {
     return ( num < 10 ? "0" : "" ) + num;
   }
 
-  var hours = Math.floor(total_seconds / 3600);
-  total_seconds = total_seconds % 3600;
+  var hours = Math.floor(totalSeconds / 3600);
+  totalSeconds = totalSeconds % 3600;
 
-  var minutes = Math.floor(total_seconds / 60);
-  total_seconds = total_seconds % 60;
+  var minutes = Math.floor(totalSeconds / 60);
+  totalSeconds = totalSeconds % 60;
 
-  var seconds = Math.floor(total_seconds);
+  var seconds = Math.floor(totalSeconds);
 
   // Pad the minutes and seconds with leading zeros, if required
-  hours = pretty_time_string(hours);
-  minutes = pretty_time_string(minutes);
-  seconds = pretty_time_string(seconds);
+  hours = prettyTime(hours);
+  minutes = prettyTime(minutes);
+  seconds = prettyTime(seconds);
 
   // Compose the string for display
   var currentTimeString = hours + ":" + minutes + ":" + seconds;
@@ -129,9 +135,18 @@ function get_elapsed_time_string(total_seconds) { //From https://stackoverflow.c
 }
 
 
-
+//Monitor on click function for each card
 $('.deck').on('click', '.card', function(){
-	
+
+	if ($('#timer').data('execute') === true) { //Timer only runs once per game
+
+		gameTimer = setInterval(function() {
+			elapsedSeconds = elapsedSeconds + 1;
+			$('#timer').text(elapsedTime(elapsedSeconds));
+		}, 1000);
+
+		$('#timer').data({'execute':false});
+	}
 
 	$(this).addClass('unclickable'); //prevents double clicking to match
 	if (openCards.length >= 2) {return;} //stops extra clicks past one pair of cards
@@ -139,9 +154,9 @@ $('.deck').on('click', '.card', function(){
 	displayCard.call(this);
 	addOpenCard($(this).children().attr('class'));
 
-	if (moveCount === 20) {
+	if (moveCount === 10) {
 		setStars(2);
-	} else if (moveCount === 30) {
+	} else if (moveCount === 20) {
 		setStars(1);
 	}
 });
@@ -149,13 +164,9 @@ $('.deck').on('click', '.card', function(){
 $('.restart').click(displayDeck);
 
 
-let openCards, moveCount, totalMatched, elapsed_seconds;
-elapsed_seconds = 0;
+let openCards, moveCount, totalMatched, elapsedSeconds, gameTimer;
+elapsedSeconds = 0;
 openCards = [];
 
 displayDeck();
 	
-setInterval(function() {
-	elapsed_seconds = elapsed_seconds + 1;
-	$('#timer').text(get_elapsed_time_string(elapsed_seconds));
-}, 1000);
